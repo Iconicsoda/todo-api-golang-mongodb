@@ -1,7 +1,6 @@
 package main
 
 import (
-	toDo "Routes/Todo"
 	"log"
 	"net/http"
 )
