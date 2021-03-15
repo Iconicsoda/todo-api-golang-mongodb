@@ -1,4 +1,4 @@
-package toDo
+package todo
 
 import (
 	"encoding/json"
