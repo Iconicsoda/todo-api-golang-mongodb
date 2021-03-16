@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 	"github.com/iconicsoda/todo-api-golang-mongodb/database"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -27,8 +28,18 @@ func (toDo *toDo) createID() {
 }
 
 func GetAllTodos(resp http.ResponseWriter, req *http.Request) {
-	fon := returnAllToDos(data, bson.M{})
-	json.NewEncoder(resp).Encode(fon)
+	toDos := returnAllToDos(data, bson.M{})
+
+	resp.WriteHeader(http.StatusOK)
+
+	json.NewEncoder(resp).Encode(toDos)
+}
+
+func GetOneTodo(resp http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+	todo := returnOneTodo(data, bson.M{"id": vars["id"]})
+	resp.WriteHeader(http.StatusAccepted)
+	json.NewEncoder(resp).Encode(todo)
 }
 
 func PostToDo(resp http.ResponseWriter, req *http.Request) {
@@ -68,6 +79,14 @@ func returnAllToDos(client *mongo.Client, filter bson.M) []*toDo {
 	}
 
 	return toDos
+}
+
+func returnOneTodo(client *mongo.Client, filter bson.M) toDo {
+	var todo toDo
+	collection := client.Database("apiTodo").Collection("toDo")
+	result := collection.FindOne(context.TODO(), filter)
+	result.Decode(&todo)
+	return todo
 }
 
 func insertNewTodo(client *mongo.Client, todo toDo) interface{} {

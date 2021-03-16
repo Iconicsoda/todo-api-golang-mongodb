@@ -11,8 +11,9 @@ import (
 
 func main() {
 
-	route := mux.NewRouter()
+	route := mux.NewRouter().StrictSlash(true)
 
+	route.HandleFunc("/todo/{id}", todo.GetOneTodo).Methods("GET")
 	route.HandleFunc("/todo", todo.GetAllTodos).Methods("GET")
 	route.HandleFunc("/todo", todo.PostToDo).Methods("POST")
 
