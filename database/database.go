@@ -26,7 +26,7 @@ func GetClient() *mongo.Client {
 	return client
 }
 
-func database() {
+func Database() {
 	c := GetClient()
 	err := c.Ping(context.Background(), readpref.Primary())
 	if err != nil {
